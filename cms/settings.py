@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "rest_framework",
-    'rest_framework_swagger',
-    'drf_yasg'
+    "rest_framework_swagger",
+    "drf_yasg",
+    "api.apps.ApiConfig"
 ]
 
 MIDDLEWARE = [
