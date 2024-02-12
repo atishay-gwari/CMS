@@ -29,9 +29,9 @@ class Policys(models.Model):
 
 class Claims(models.Model):
     STATUS_CHOICES = [
-        ('A', 'Accepted'),
-        ('R', 'Rejected'),
-        ('I', 'Initiated'),
+        ('Accepted', 'Accepted'),
+        ('Rejected', 'Rejected'),
+        ('Initiated', 'Initiated'),
     ]
     claim_id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False) 
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=False,blank=False)

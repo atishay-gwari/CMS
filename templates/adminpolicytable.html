@@ -1,0 +1,76 @@
+{% extends './common/base.html' %} 
+{% load static %} 
+{% block content %} 
+<div class="d-flex flex-column" id="content-wrapper">
+  <div id="content">
+    <div class="container-fluid">
+      <h3 class="text-dark mb-4">Admin Policy View</h3>
+      <div class="card shadow">
+        <div class="card-header py-3">
+            <div class="row align-items-center">
+                <div class="col"> 
+                    <p class="text-primary m-0 fw-bold">Policy Info</p>
+                </div>
+                 <div class="col-auto">
+                    <a href="{% url 'AddAdminPolicy' %}">
+                        <button class="btn btn-primary ">Add</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+          <div
+            class="table-responsive table mt-2"
+            id="dataTable"
+            role="grid"
+            aria-describedby="dataTable_info"
+          >
+            <table class="table my-0" id="dataTable">
+              <thead>
+                <tr>
+                  <th><strong>User</strong></th>
+                  <th><strong>Policy Number</strong></th>
+                  <th><strong>Holder Name</strong></th>
+                  <th><strong>Policy Type</strong></th>
+                  <th><strong>Coverage</strong></th>
+                  <th><strong>Start Date</strong></th>
+                  <th><strong>End Date</strong></th>
+                  <th><strong>Premuim</strong></th>
+                  <th><strong>Edit</strong></th>
+                  <th><strong>Delete</strong></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for i in admin_policys %}
+                <tr>
+                  <td>{{i.user}}</td>
+                  <td>{{i.policy_number}}</td>
+                  <td>{{i.holder_name}}</td>
+                  <td>{{i.policy_type}}</td>
+                  <td>{{i.coverage}}</td>
+                  <td>{{i.start_date}}</td>
+                  <td>{{i.end_date}}</td>
+                  <td>{{i.premuim}}</td>
+                  <td><a href="{% url 'UpdateAdminPolicy' i.policy_number %}"><button class="btn btn-warning">Edit</button></a></td>
+                  <td><a href="{% url 'DeleteAdminPolicy' i.policy_number %}"><button class="btn btn-danger">Delete</button></a></td>
+
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7">No Policys Found!</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="row">
+            <br />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+

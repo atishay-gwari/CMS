@@ -1,0 +1,82 @@
+{% extends './common/base.html' %} 
+{% load static %} 
+{% block content %} 
+<div class="d-flex flex-column" id="content-wrapper">
+  <div id="content">
+    <div class="container-fluid">
+      <h3 class="text-dark mb-4">Admin Claims Section</h3>
+      <div class="card shadow">
+        <div class="card-header py-3">
+            <div class="row align-items-center">
+                <div class="col"> 
+                    <p class="text-primary m-0 fw-bold">Claim Info</p>
+                </div>  
+                <div class="col-auto">
+                    <a href="{% url 'AddAdminClaim' %}">
+                        <button class="btn btn-primary ">Add</button>
+                    </a> 
+                </div>
+        
+            </div>
+        </div>
+        <div class="card-body">
+          <div
+            class="table-responsive table mt-2"
+            id="dataTable"
+            role="grid"
+            aria-describedby="dataTable_info"
+          >
+            <table class="table my-0" id="dataTable">
+              <thead>
+                <tr>
+                    <th><strong>User</strong></th>
+                  <th><strong>Policy Number</strong></th>
+                  <th><strong>Claim ID</strong></th>
+                  <th><strong>Amount</strong></th>
+                  <th><strong>Left Amount</strong></th>
+                  <th><strong>Status</strong></th>
+                  <th><strong>Reason</strong></th>
+                  <th><strong>Created At</strong></th>
+                  <th><strong>Updated At</strong></th>
+                  <th><strong>Edit</strong></th>
+                  <th><strong>Delete</strong></th>
+
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for i in admin_claims %}
+                <tr>
+                  <td>{{i.user}}</td>
+
+                  <td>{{i.policy_number}}</td>
+                  <td>{{i.claim_id}}</td>
+                  <td>{{i.amt}}</td>
+                  <td>{{i.res_amt}}</td>
+                  <td>{{i.status}}</td>
+                  <td>{{i.reason}}</td>
+                  <td>{{i.created_at}}</td>
+                  <td>{{i.updated_at}}</td>
+                  <td><a href="{% url 'UpdateAdminClaim' i.claim_id %}"><button class="btn btn-warning">Edit</button></a></td>
+                  <td><a href="{% url 'DeleteAdminClaim' i.claim_id %}"><button class="btn btn-danger">Delete</button></a></td>
+
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7">No Claims Found! </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="row">
+            <br />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+

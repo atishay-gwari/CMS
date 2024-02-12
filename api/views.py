@@ -25,7 +25,7 @@ def get_policys(request):
     if request.method == 'GET':
         policys = Policys.objects.filter(user=request.user)
         serializer = PolicySerializer(policys, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
 
 @api_view(['GET'])
@@ -33,7 +33,7 @@ def get_claims(request):
     if request.method == 'GET':
         claims = Claims.objects.filter(user=request.user)
         serializer = ClaimCreateSerializer(claims, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 
@@ -54,25 +54,25 @@ def post_create_claim(request):
                         latest_claim_instance = Claims.objects.filter(policy_number=claim.policy_number).latest('created_at')
                         remaining_amt = latest_claim_instance.res_amt - claim.amt
                         if remaining_amt >= 0:
-                            claim.status = 'I'
+                            claim.status = 'Initiated'
                             claim.res_amt = remaining_amt
                             claim.save()
                             serializer = ClaimCreateSerializer(claim)
                             return Response(serializer.data, status=status.HTTP_201_CREATED)
                         else:
-                            claim.status = 'R'
+                            claim.status = 'Rejected'
                             claim.res_amt = latest_claim_instance.res_amt
                             claim.save()
                             serializer = ClaimCreateSerializer(claim)
                             return Response(serializer.data, status=status.HTTP_201_CREATED)
                     else:
-                        claim.status = 'I'
+                        claim.status = 'Initiated'
                         claim.res_amt -= claim.amt
                         claim.save()
                         serializer = ClaimCreateSerializer(claim)
                         return Response(serializer.data, status=status.HTTP_201_CREATED)
                 else:
-                    claim.status = 'R'
+                    claim.status = 'Rejected'
                     claim.save()
                     serializer = ClaimCreateSerializer(claim)
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -87,6 +87,7 @@ def post_create_claim(request):
 
 @api_view(['POST'])
 def signup_api(request):
+    print(request.method)
     if request.method == "POST":
         first_name = request.data.get("firstname")
         last_name = request.data.get("lastname")
@@ -186,7 +187,7 @@ def update_policy(request, pk):
     serializer = PolicySerializer(policy, data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
@@ -200,7 +201,7 @@ def update_claim(request, pk):
     serializer = ClaimSerializer(claim, data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
@@ -212,7 +213,7 @@ def delete_policy(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     policy.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_202_ACCEPTED)
 
 @api_view(['DELETE'])
 @permission_classes([IsAdminUser])
@@ -223,7 +224,7 @@ def delete_claim(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     claim.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_202_ACCEPTED)
 
 
 @api_view(['GET'])
@@ -234,4 +235,17 @@ def get_user_list(request):
     """
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['PUT'])
+def claim_approval(request, pk):
+    try:
+        claim = Claims.objects.get(pk=pk)
+        claim.status=request.data.get("status")
+        claim.save()
+        # print(claim)
+        return Response(status=status.HTTP_201_CREATED)
+    except Claims.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    # print(request.data)

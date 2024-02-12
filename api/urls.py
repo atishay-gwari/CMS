@@ -28,13 +28,15 @@ urlpatterns = [
     # ADMIN API'S
     path('admin/policy/', views.get_policy_list),
     path('admin/policy/create/', views.create_policy),
-    path('admin/policy/<int:pk>/', views.update_policy),
-    path('admin/policy/<int:pk>/delete/', views.delete_policy),
+    path('admin/policy/<str:pk>/', views.update_policy),
+    path('admin/policy/<str:pk>/delete/', views.delete_policy),
     path('admin/claim/', views.get_claim_list),
     path('admin/claim/create/', views.create_claim),
-    path('admin/claim/<int:pk>/', views.update_claim),
-    path('admin/claim/<int:pk>/delete/', views.delete_claim),
+    path('admin/claim/<str:pk>/', views.update_claim),
+    path('admin/claim/<str:pk>/delete/', views.delete_claim),
+    
+    path('admin/approval/<str:pk>/', views.claim_approval),
 
-    path('api/admin/users/', views.get_user_list),
+    path('admin/users/', views.get_user_list),
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0),name='schema-swagger-ui'),
 ]

@@ -25,7 +25,7 @@
         <div class="container-fluid d-flex flex-column p-0">
           <a
             class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0"
-            href="{% url 'home' %}"
+            href="#"
           >
             <div class="sidebar-brand-icon">
               <i class="fas fa-list"></i>
@@ -33,6 +33,38 @@
             <div class="sidebar-brand-text mx-3"><span>CMS</span></div>
           </a>
           <hr class="sidebar-divider my-0" />
+        {% if user.is_staff %}
+          <ul class="navbar-nav text-light" id="accordionSidebar">
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'AdminHome' %}"
+                ><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a
+              >
+            </li>
+            <li class="nav-item"></li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'ReadAdminPolicy' %}"
+                ><i class="fas fa-table" style="font-size: 13px"></i
+                ><span>Policy</span></a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'ReadAdminClaim' %}"
+                ><i class="fas fa-table" style="font-size: 13px"></i
+                ><span>Claim</span></a
+              >
+            </li>
+            {% if user.is_authenticated %}
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}"
+                ><i class="fas fa-user-circle" style="font-size: 13px"></i
+                ><span>Logout</span></a
+              >
+            </li>
+          
+            {% endif %}
+          </ul>
+        {% else  %}
           <ul class="navbar-nav text-light" id="accordionSidebar">
             <li class="nav-item">
               <a class="nav-link active" href="{% url 'home' %}"
@@ -52,7 +84,19 @@
                 ><span>Claim</span></a
               >
             </li>
+            {% if user.is_authenticated %}
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}"
+                ><i class="fas fa-user-circle" style="font-size: 13px"></i
+                ><span>Logout</span></a
+              >
+            </li>
+          
+            {% endif %}
           </ul>
+          {% endif %}
+
           <div class="text-center d-none d-md-inline">
             <button
               class="btn rounded-circle border-0"
@@ -78,20 +122,21 @@
                 <a class="btn btn-primary shadow" role="button" href="{% url 'signup' %}">Sign up</a>
                 <a class="btn btn-primary shadow" role="button" href="{% url 'login' %}"
                     style="margin-right: 10px;margin-left: 10px;">Sign in</a>
-
-                {% else %}
-                <a class="btn btn-primary shadow" role="button" href="{% url 'logout' %}"
-                    style="margin-right: 10px;margin-left: 10px;">Sign out</a>
-                {% endif %}
+              {% else %}
               <ul class="navbar-nav flex-nowrap ms-auto">  
-                {% if first %} 
-                
-                
-                  <span class="d-none d-lg-inline me-2 text-gray-600 small"
-                  >{{first}}</span>
-                
-                {% endif %}
+                  <span class="d-none d-lg-inline me-5  text-grey-300 text-lg">Claims Management System</span>
+      
               </ul>
+              {% endif %}
+                <ul class="navbar-nav flex-nowrap ms-auto">  
+                  {% if request.user.first_name %} 
+                  
+                    <div class="d-none d-sm-block topbar-divider" ></div>
+                    <span class="d-none d-lg-inline me-5  text-gray-600 text-lg"
+                    >{{request.user.first_name}}</span>
+                  
+                  {% endif %}
+                </ul>
             </div>
           </nav>
 
@@ -116,5 +161,8 @@
     <script src="{% static 'js/chart.min.js' %}"></script>
     <script src="{% static 'js/bs-init.js' %}"></script>
     <script src="{% static 'js/theme.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>    
   </body>
 </html>

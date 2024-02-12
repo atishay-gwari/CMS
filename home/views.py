@@ -13,19 +13,18 @@ from .forms import *
 @login_required(login_url="login")
 # Create your views here.
 def Home(request):
-    user_first= request.user.first_name
+    
 
-    accepted_claims = Claims.objects.filter(user=request.user, status='A').count()
-    rejected_claims = Claims.objects.filter(user=request.user, status='R').count()
-    initiated_claims = Claims.objects.filter(user=request.user, status='I`').count()
+    accepted_claims = Claims.objects.filter(user=request.user, status='Accepted').count()
+    rejected_claims = Claims.objects.filter(user=request.user, status='Rejected').count()
+    initiated_claims = Claims.objects.filter(user=request.user, status='Initiated').count()
 
 
     count_of_claims=Claims.objects.filter(user=request.user).count()
     count_of_policys=Policys.objects.filter(user=request.user).count()
 
 
-
-    context={"first": user_first,"accepted_claims":accepted_claims,"rejected_claims":rejected_claims,"count_of_claims":count_of_claims,"count_of_policys":count_of_policys,"initiated_claims":initiated_claims}
+    context={"accepted_claims":accepted_claims,"rejected_claims":rejected_claims,"count_of_claims":count_of_claims,"count_of_policys":count_of_policys,"initiated_claims":initiated_claims}
     return render(request, "index.html",context)
 
 
@@ -74,7 +73,10 @@ def loginpage(request):
         if user is not None:
             # pruser)
             login(request, user)
-            return redirect("home")
+            if user.is_staff:
+                return redirect("AdminHome")
+            else:   
+                return redirect("home")
         # premail,password)
         else:
             # messages.error(request, "Error please check your credentials!")
@@ -136,25 +138,25 @@ def Create_Claim(request):
                     remaining_amt = latest_claim_instance.res_amt - claim.amt
                     if remaining_amt >= 0:
                         # If remaining_amt is non-negative, deduct claim amount and save the claim
-                        claim.status = 'I'
+                        claim.status = 'Initiated'
                         claim.res_amt = remaining_amt
                         claim.save()
                         return redirect('getclaim')
                     else:
                         # If remaining_amt is negative, reject the claim
-                        claim.status = 'R'
+                        claim.status = 'Rejected'
                         claim.res_amt = latest_claim_instance.res_amt
                         claim.save()
                         return redirect('getclaim')
                 else:
                     # If no previous claims exist, deduct claim amount and save the claim
-                    claim.status = 'I'
+                    claim.status = 'Initiated'
                     claim.res_amt -= claim.amt
                     claim.save()
                     return redirect('getclaim')
             
             # If claim amount exceeds res_amt, reject the claim
-            claim.status = 'R'
+            claim.status = 'Rejected'
             claim.save()
             return redirect('getclaim')
                 
