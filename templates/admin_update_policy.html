@@ -16,9 +16,9 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h4 class="text-dark mb-4">Add Policy Info!</h4>
+                                        <h4 class="text-dark mb-4">Update Policy Info!</h4>
                                     </div>
-                                    <form action="{% url 'AddAdminPolicy' %}" method="POST" id="policy-form">
+                                    <form action="" method="POST" id="policy-form">
                                         {% csrf_token %}
 
                                         <div class="mb-3">{{ form.user|as_crispy_field }}</div> 
@@ -27,17 +27,18 @@
 
                                         <div class="mb-3">{{ form.start_date|as_crispy_field }}</div>
 
-                                        <div class="mb-3">{{ form.end_date|as_crispy_field }}</div> 
-                                        
+                                        <div class="mb-3">{{ form.end_date|as_crispy_field }}</div>
                                         <div id="end-date-message" class="text-danger" style="display: none;">End date should be after start date.</div>
+
                                         <br>
+                                        
                                         <div class="mb-3">{{ form.premuim|as_crispy_field }}</div> 
                                         
                                         <div class="mb-3">{{ form.coverage|as_crispy_field }}</div> 
+                                        
                                         <div class="mb-3">{{ form.policy_type|as_crispy_field }}</div> 
 
                                         <button id="submit-btn" class="btn btn-primary d-block btn-user w-100" type="submit">Submit</button>
-                                        
                                     </form>
                                 </div>
                             </div>
@@ -59,15 +60,12 @@
         function checkEndDate() {
             const startDateField = form.querySelector("[name='start_date']");
             const endDateField = form.querySelector("[name='end_date']");
-            const startDateValue = startDateField.value;
-            const endDateValue = endDateField.value;
-
-            const startDate = new Date(startDateValue);
-            const endDate = new Date(endDateValue);
+            const startDateValue = new Date(startDateField.value);
+            const endDateValue = new Date(endDateField.value);
 
             const submitBtn = document.getElementById("submit-btn");
 
-            if (endDate <= startDate) {
+            if (endDateValue <= startDateValue) {
                 submitBtn.disabled = true;
                 endDateMessage.style.display = "block";
             } else {

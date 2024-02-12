@@ -23,13 +23,17 @@
                                     <form action="" method="POST">
                                         {% csrf_token %}
 
-                                        {% comment %} <div class="mb-3">{{ form.policy_number|as_crispy_field }}</div> 
+                                        <div class="mb-3">{{ form.user|as_crispy_field }}</div> 
 
-                                        <div class="mb-3">{{ form.amt|as_crispy_field }}</div>
+                                        <div class="mb-3">{{ form.policy_number|as_crispy_field }}</div>
 
-                                        <div class="mb-3">{{ form.reason|as_crispy_field }}</div> {% endcomment %}
+                                        <div class="mb-3">{{ form.status|as_crispy_field }}</div>
 
-                                        {{form|crispy}}
+                                        <div class="mb-3">{{ form.res_amt|as_crispy_field }}</div> 
+                                        
+                                        <div class="mb-3">{{ form.amt|as_crispy_field }}</div> 
+                                        
+                                        <div class="mb-3">{{ form.reason|as_crispy_field }}</div>
 
                                         <button class="btn btn-primary d-block btn-user w-100" type="submit">Submit</button>
                                     </form>
