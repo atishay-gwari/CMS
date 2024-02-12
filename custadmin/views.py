@@ -6,6 +6,11 @@ from django.contrib.auth.decorators import login_required,user_passes_test
 from django.shortcuts import render
 from home.models import *
 from .forms import *
+from django.contrib import messages
+
+
+
+
 def admin_check(user):
     return user.is_staff
 
@@ -50,6 +55,8 @@ def AdminCreatePolicy(request):
         form = AdminPolicyForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Policy created successfully.")
+            
             # Redirect to a success page or any other page
             return redirect('ReadAdminPolicy')
     else:
@@ -66,6 +73,7 @@ def AdminDeletePolicy(request, id):
     policy = get_object_or_404(Policys, policy_number=id)
     
     policy.delete()
+    messages.success(request, "Policy deleted successfully.")
     return redirect('ReadAdminPolicy')  # Redirect to the home page or any other desired URL after deletion
     
 @login_required(login_url="login")
@@ -75,6 +83,8 @@ def AdminUpdatePolicy(request, id):
     form = AdminPolicyForm(request.POST or None, instance=policy)
     if form.is_valid():
         form.save()
+        messages.success(request, "Policy updated successfully.")
+        
         return redirect('ReadAdminPolicy')  # Redirect to the home page or any other desired URL after update
     return render(request, 'admin_update_policy.html', {'form': form})
 
@@ -101,6 +111,8 @@ def AdminCreateClaim(request):
         form = AdminClaimForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Claim deleted successfully.")
+    
             # Redirect to a success page or any other page
             return redirect('ReadAdminClaim')
     else:
@@ -116,6 +128,8 @@ def AdminDeleteClaim(request, id):
     claim = get_object_or_404(Claims, claim_id=id)
 
     claim.delete()
+    messages.success(request, "Claim deleted successfully.")
+    
     return redirect('ReadAdminClaim')  # Redirect to the home page or any other desired URL after deletion
 
 
@@ -126,5 +140,7 @@ def AdminUpdateClaim(request, id):
     form = AdminClaimForm(request.POST or None, instance=claim)
     if form.is_valid():
         form.save()
+        messages.success(request, "Claim updated successfully.")
+        
         return redirect('ReadAdminClaim')  # Redirect to the home page or any other desired URL after update
     return render(request, 'admin_update_claim.html', {'form': form})

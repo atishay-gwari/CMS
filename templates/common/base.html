@@ -33,62 +33,66 @@
             <div class="sidebar-brand-text mx-3"><span>CMS</span></div>
           </a>
           <hr class="sidebar-divider my-0" />
+        {% with request.resolver_match.url_name as url_name %}
         {% if user.is_staff %}
           <ul class="navbar-nav text-light" id="accordionSidebar">
-            <li class="nav-item">
-              <a class="nav-link active" href="{% url 'AdminHome' %}"
-                ><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a
+            <li class="nav-item"><a class="nav-link {% if url_name == 'AdminHome' %}active{% endif %}" href="{% url 'AdminHome' %}">
+              <i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a
               >
             </li>
             <li class="nav-item"></li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'ReadAdminPolicy' %}"
-                ><i class="fas fa-table" style="font-size: 13px"></i
+              <a class="nav-link {% if url_name == 'ReadAdminPolicy' %}active{% endif %}" href="{% url 'ReadAdminPolicy' %}">
+              <i class="fas fa-table" style="font-size: 13px"></i
                 ><span>Policy</span></a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'ReadAdminClaim' %}"
-                ><i class="fas fa-table" style="font-size: 13px"></i
+              <a class="nav-link {% if url_name == 'ReadAdminClaim' %}active{% endif %}" href="{% url 'ReadAdminClaim' %}">
+              <i class="fas fa-table" style="font-size: 13px"></i
                 ><span>Claim</span></a
               >
             </li>
             {% if user.is_authenticated %}
 
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'logout' %}"
-                ><i class="fas fa-user-circle" style="font-size: 13px"></i
+              <a class="nav-link {% if url_name == 'logout' %}active{% endif %}" href="{% url 'logout' %}">
+                <i class="fas fa-user-circle" style="font-size: 13px"></i
                 ><span>Logout</span></a
               >
             </li>
           
             {% endif %}
+    
           </ul>
         {% else  %}
+          
           <ul class="navbar-nav text-light" id="accordionSidebar">
             <li class="nav-item">
-              <a class="nav-link active" href="{% url 'home' %}"
-                ><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a
+              <a class="nav-link {% if url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
+                <i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a
               >
             </li>
             <li class="nav-item"></li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'getpolicy' %}"
-                ><i class="fas fa-table" style="font-size: 13px"></i
+              <a class="nav-link {% if url_name == 'getpolicy' %}active{% endif %}" href="{% url 'getpolicy' %}">
+                <i class="fas fa-table" style="font-size: 13px"></i
                 ><span>Policy</span></a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'getclaim' %}"
-                ><i class="fas fa-table" style="font-size: 13px"></i
+              <a class="nav-link {% if url_name == 'getclaim' %}active{% endif %}" href="{% url 'getclaim' %}">
+
+                <i class="fas fa-table" style="font-size: 13px"></i
                 ><span>Claim</span></a
               >
             </li>
             {% if user.is_authenticated %}
 
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'logout' %}"
-                ><i class="fas fa-user-circle" style="font-size: 13px"></i
+              <a class="nav-link {% if url_name == 'logout' %}active{% endif %}" href="{% url 'logout' %}">
+
+                <i class="fas fa-user-circle" style="font-size: 13px"></i
                 ><span>Logout</span></a
               >
             </li>
@@ -96,7 +100,7 @@
             {% endif %}
           </ul>
           {% endif %}
-
+          {% endwith %}
           <div class="text-center d-none d-md-inline">
             <button
               class="btn rounded-circle border-0"
@@ -139,7 +143,11 @@
                 </ul>
             </div>
           </nav>
-
+          {% for message in messages %}
+                <div class="alert alert-{{ message.tags}}" id="messagenoti" role="alert">
+                    <strong>Notification: </strong>{{message}}
+                </div>
+          {% endfor %}
           {% block content %} 
           
         
@@ -163,6 +171,11 @@
     <script src="{% static 'js/theme.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>var message_ele = document.getElementById("messagenoti");
+
+      setTimeout(function(){ 
+         message_ele.style.display = "none"; 
+      }, 3000);</script>    
   </body>
 </html>

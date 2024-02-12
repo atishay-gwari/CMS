@@ -5,8 +5,8 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
-
-
+from django.contrib import messages
+import re
 
 
 
@@ -29,7 +29,6 @@ def Home(request):
 
 
 
-from django.contrib import messages
 
 def signuppage(request):
     if request.method == "POST":
@@ -48,13 +47,17 @@ def signuppage(request):
         if password1 == confirmpassword:
             if not User.objects.filter(username=user).exists():
                 if not User.objects.filter(email=e_mail).exists():
-                    user = User.objects.create_user(
-                        username=user, email=e_mail, password=password1,
-                        first_name=first_name, last_name=last_name
-                    )
-                    user.save()
-                    messages.success(request, "Account Created!")
-                    return redirect("login")
+                    # Check if the username contains at least one non-numeric character
+                    if re.search("[a-zA-Z]", user):
+                        user = User.objects.create_user(
+                            username=user, email=e_mail, password=password1,
+                            first_name=first_name, last_name=last_name
+                        )
+                        user.save()
+                        messages.success(request, "Account Created!")
+                        return redirect("login")
+                    else:
+                        messages.error(request, "Username must contain at least one non-numeric character.")
                 else:
                     messages.error(request, "Email is already in use.")
             else:
@@ -79,7 +82,7 @@ def loginpage(request):
                 return redirect("home")
         # premail,password)
         else:
-            # messages.error(request, "Error please check your credentials!")
+            messages.error(request, "Error please check your credentials!")
             return redirect("login")
     else:
         return render(request, "login.html")
@@ -89,6 +92,7 @@ def loginpage(request):
 def logoutpage(request):
     # pr"logout")
     logout(request)
+    messages.success(request, "Logged out successfully.")
     return redirect("home")
 
 
@@ -141,23 +145,30 @@ def Create_Claim(request):
                         claim.status = 'Initiated'
                         claim.res_amt = remaining_amt
                         claim.save()
+                        messages.success(request, "Claim initiated successfully.")
+                        
                         return redirect('getclaim')
                     else:
                         # If remaining_amt is negative, reject the claim
                         claim.status = 'Rejected'
                         claim.res_amt = latest_claim_instance.res_amt
                         claim.save()
+                        messages.error(request, "Claim amount exceeds policy coverage. Claim rejected.")
+                        
                         return redirect('getclaim')
                 else:
                     # If no previous claims exist, deduct claim amount and save the claim
                     claim.status = 'Initiated'
                     claim.res_amt -= claim.amt
                     claim.save()
+                    messages.success(request, "Claim initiated successfully.")
+                   
                     return redirect('getclaim')
             
             # If claim amount exceeds res_amt, reject the claim
             claim.status = 'Rejected'
             claim.save()
+            messages.error(request, "Claim amount exceeds policy coverage. Claim rejected.")
             return redirect('getclaim')
                 
     context = {"form": form}

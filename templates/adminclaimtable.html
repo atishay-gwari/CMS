@@ -53,7 +53,15 @@
                   <td>{{i.claim_id}}</td>
                   <td>{{i.amt}}</td>
                   <td>{{i.res_amt}}</td>
-                  <td>{{i.status}}</td>
+                  <td>
+                    {% if i.status == 'Accepted' %}
+                        <span style="color: green;">{{ i.status }}</span>
+                    {% elif i.status == 'Rejected' %}
+                        <span style="color: red;">{{ i.status }}</span>
+                    {% elif i.status == 'Initiated' %}
+                        <span style="color: orange;">{{ i.status }}</span>
+                    {% endif %}
+                  </td>
                   <td>{{i.reason}}</td>
                   <td>{{i.created_at}}</td>
                   <td>{{i.updated_at}}</td>
