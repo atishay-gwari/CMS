@@ -16,6 +16,8 @@ urlpatterns = [
     path('addclaim/', views.AdminCreateClaim, name="AddAdminClaim"),
     path('Deleteclaim/<str:id>/', views.AdminDeleteClaim, name="DeleteAdminClaim"),
     path('Updateclaim/<str:id>/', views.AdminUpdateClaim, name="UpdateAdminClaim"),
+    path('Aprroval/<str:id>/', views.AdminApprovalClaim, name="AdminApprovalClaim"),
+
 
     
 

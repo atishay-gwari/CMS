@@ -7,7 +7,8 @@ from .models import *
 from .forms import *
 from django.contrib import messages
 import re
-
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 
 @login_required(login_url="login")
@@ -49,21 +50,30 @@ def signuppage(request):
                 if not User.objects.filter(email=e_mail).exists():
                     # Check if the username contains at least one non-numeric character
                     if re.search("[a-zA-Z]", user):
-                        user = User.objects.create_user(
-                            username=user, email=e_mail, password=password1,
-                            first_name=first_name, last_name=last_name
-                        )
-                        user.save()
-                        messages.success(request, "Account Created!")
-                        return redirect("login")
+                        # Check if the password is strong enough
+                        if (len(password1) >= 8) and any(char.isdigit() for char in password1) and any(char.isalnum() for char in password1) and any(not char.isalnum() for char in password1):
+                            user = User.objects.create_user(
+                                username=user, email=e_mail, password=password1,
+                                first_name=first_name, last_name=last_name
+                            )
+                            user.save()
+                            messages.success(request, "Account Created!")
+                            return redirect("login")
+                        else:
+                            messages.error(request, "Password must be at least be 8 characters long and contain at least one digit, one letter, and one special character.")
+                            return redirect("signup")
                     else:
                         messages.error(request, "Username must contain at least one non-numeric character.")
+                        return redirect("signup")
                 else:
                     messages.error(request, "Email is already in use.")
+                    return redirect("signup")
             else:
                 messages.error(request, "Username is already taken.")
+                return redirect("signup")
         else:
             messages.error(request, "Passwords do not match.")
+            return redirect("signup")
 
     return render(request, "register.html")
 

@@ -18,7 +18,7 @@ from rest_framework.response import Response
 from home.models import Policys, Claims
 from home.forms import ClaimForm
 from home.serializers import *
-
+import re
 
 @api_view(['GET'])
 def get_policys(request):
@@ -87,36 +87,45 @@ def post_create_claim(request):
 
 @api_view(['POST'])
 def signup_api(request):
-    print(request.method)
     if request.method == "POST":
         first_name = request.data.get("firstname")
         last_name = request.data.get("lastname")
-        username = request.data.get("username")
-        email = request.data.get("email")
+        user = request.data.get("Username")
+        e_mail = request.data.get("email")
         password1 = request.data.get("password")
         confirmpassword = request.data.get("confirmpassword")
 
         # Check if any field is empty
-        if not all([first_name, last_name, username, email, password1, confirmpassword]):
-            return Response({"error": "Please fill out all fields."}, status=status.HTTP_400_BAD_REQUEST)
+        if not all([first_name, last_name, user, e_mail, password1, confirmpassword]):
+            return Response({"error": "Please fill out all fields."}, status=400)
 
         if password1 == confirmpassword:
-            if not User.objects.filter(username=username).exists():
-                if not User.objects.filter(email=email).exists():
-                    user = User.objects.create_user(
-                        username=username, email=email, password=password1,
-                        first_name=first_name, last_name=last_name
-                    )
-                    user.save()
-                    return Response({"message": "Account created successfully!"}, status=status.HTTP_201_CREATED)
+            if not User.objects.filter(username=user).exists():
+                if not User.objects.filter(email=e_mail).exists():
+                    # Check if the username contains at least one non-numeric character
+                    if re.search("[a-zA-Z]", user):
+                        # Check if the password is strong enough
+                        if (len(password1) >= 8) and any(char.isdigit() for char in password1) and any(char.isalnum() for char in password1) and any(not char.isalnum() for char in password1):
+                            user = User.objects.create_user(
+                                username=user, email=e_mail, password=password1,
+                                first_name=first_name, last_name=last_name
+                            )
+                            user.save()
+                            return Response({"message": "Account Created!"}, status=201)
+                        else:
+                            return Response({"error": "Password must be at least be 8 characters long and contain at least one digit, one letter, and one special character."}, status=400)
+                    else:
+                        return Response({"error": "Username must contain at least one non-numeric character."}, status=400)
                 else:
-                    return Response({"error": "Email is already in use."}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"error": "Email is already in use."}, status=400)
             else:
-                return Response({"error": "Username is already taken."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": "Username is already taken."}, status=400)
         else:
-            return Response({"error": "Passwords do not match."}, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response({"error": "Method not allowed."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            return Response({"error": "Passwords do not match."}, status=400)
+
+    return Response({"error": "Method not allowed"}, status=405)
+
+
 
 @api_view(['POST'])
 def login_api(request):
@@ -180,7 +189,7 @@ def create_claim(request):
 @permission_classes([IsAdminUser])
 def update_policy(request, pk):
     try:
-        policy = Policys.objects.get(pk=pk)
+        policy = Policys.objects.get(policy_id=pk)
     except Policys.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -194,7 +203,7 @@ def update_policy(request, pk):
 @permission_classes([IsAdminUser])
 def update_claim(request, pk):
     try:
-        claim = Claims.objects.get(pk=pk)
+        claim = Claims.objects.get(claim_id=pk)
     except Claims.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -208,7 +217,7 @@ def update_claim(request, pk):
 @permission_classes([IsAdminUser])
 def delete_policy(request, pk):
     try:
-        policy = Policys.objects.get(pk=pk)
+        policy = Policys.objects.get(policy_id=pk)
     except Policys.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -219,7 +228,7 @@ def delete_policy(request, pk):
 @permission_classes([IsAdminUser])
 def delete_claim(request, pk):
     try:
-        claim = Claims.objects.get(pk=pk)
+        claim = Claims.objects.get(claim_id=pk)
     except Claims.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -241,7 +250,7 @@ def get_user_list(request):
 @api_view(['PUT'])
 def claim_approval(request, pk):
     try:
-        claim = Claims.objects.get(pk=pk)
+        claim = Claims.objects.get(claim_id=pk)
         claim.status=request.data.get("status")
         claim.save()
         # print(claim)

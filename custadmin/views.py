@@ -144,3 +144,16 @@ def AdminUpdateClaim(request, id):
         
         return redirect('ReadAdminClaim')  # Redirect to the home page or any other desired URL after update
     return render(request, 'admin_update_claim.html', {'form': form})
+
+
+@login_required(login_url="login")
+@user_passes_test(admin_check)
+def AdminApprovalClaim(request, id):
+    claim = get_object_or_404(Claims, claim_id=id)
+    form = AdminApprovalClaimForm(request.POST or None, instance=claim)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Claim status upated successfully.")
+        
+        return redirect('ReadAdminClaim')  # Redirect to the home page or any other desired URL after update
+    return render(request, 'approval.html', {'form': form})

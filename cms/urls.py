@@ -20,5 +20,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('home.urls')),
     path('api/', include('api.urls')),
-    path('dj-admin/',include('custadmin.urls'))
+    path('cms-admin/',include('custadmin.urls'))
 ]

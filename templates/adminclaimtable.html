@@ -40,6 +40,8 @@
                   <th><strong>Updated At</strong></th>
                   <th><strong>Edit</strong></th>
                   <th><strong>Delete</strong></th>
+                  <th><strong>Approve</strong></th>
+
 
 
                 </tr>
@@ -67,7 +69,7 @@
                   <td>{{i.updated_at}}</td>
                   <td><a href="{% url 'UpdateAdminClaim' i.claim_id %}"><button class="btn btn-warning">Edit</button></a></td>
                   <td><a href="{% url 'DeleteAdminClaim' i.claim_id %}"><button class="btn btn-danger">Delete</button></a></td>
-
+                  <td><a href="{% url 'AdminApprovalClaim' i.claim_id %}"><button class="btn btn-success">Approve</button></a></td>
                 </tr>
                 {% empty %}
                 <tr>
