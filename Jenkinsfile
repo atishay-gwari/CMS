@@ -5,7 +5,7 @@ pipeline {
         stage('Run Django with Docker Compose') {
             steps {
                 script {
-                    sh "docker-compose -f docker-compose.yml up -d app"
+                    bash "docker-compose -f docker-compose.yml up -d app"
                 }
             }
             post {
@@ -21,7 +21,7 @@ pipeline {
         stage('Run Prometheus') {
             steps {
                 script {
-                    sh "docker-compose -f docker-compose.yml up -d prometheus"
+                    bash "docker-compose -f docker-compose.yml up -d prometheus"
                 }
             }
             post {
@@ -38,7 +38,7 @@ pipeline {
     post {
         always {
             script {
-                sh "docker-compose -f docker-compose.yml down"
+                bash "docker-compose -f docker-compose.yml down"
             }
         }
     }
