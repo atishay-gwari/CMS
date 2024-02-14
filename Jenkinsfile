@@ -8,13 +8,13 @@ pipeline {
 
     {
 
-        stage('STart') 
+        stage('Ingestion') 
 
         {
 
             steps 
             {
-                echo "Starting"
+                echo "Starting Ingestion"
             }
  
 
@@ -36,22 +36,19 @@ pipeline {
             
 
         }
-        stage('Docker Running Prometheus App') 
+
+        stage('Ready Testing') 
 
         {
 
-            
             steps 
-
             {
-
-                sh 'docker-compose -f docker-compose.yml up -d prometheus'
-
+                echo "Test it now"
             }
-            
+ 
+
 
         }
-
     
 
     }
