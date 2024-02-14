@@ -2,10 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 import uuid
+from django_prometheus.models import ExportModelOperationsMixin
 
 
-
-class Policys(models.Model):
+class Policys(ExportModelOperationsMixin('policys'),models.Model):
     POLICY_TYPES = [
         ('health', 'Health Insurance'),
         ('life', 'Life Insurance'),
@@ -27,7 +27,7 @@ class Policys(models.Model):
         verbose_name_plural = "Policys"
 
 
-class Claims(models.Model):
+class Claims(ExportModelOperationsMixin('claims'),models.Model):
     STATUS_CHOICES = [
         ('Accepted', 'Accepted'),
         ('Rejected', 'Rejected'),

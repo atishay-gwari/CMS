@@ -6,3 +6,4 @@ djangorestframework==3.14.0
 django-rest-swagger==2.2.0
 drf-yasg==1.21.7
 python-dotenv==1.0.1
+django-prometheus==2.3.1
