@@ -1,56 +1,16 @@
 pipeline {
-
     agent any
 
- 
-
-    stages 
-
-    {
-
-        stage('Ingestion') 
-
-        {
-
-            steps 
-            {
-                echo "Starting Ingestion"
+    stages {
+        stage('Build Docker Images') {
+            steps {
+                sh 'docker-compose -f docker-compose.yml build'
             }
- 
-
-
         }
-    
-        stage('Docker Running Django App') 
-
-        {
-
-            
-            steps 
-
-            {
-
-                sh 'docker-compose --build docker-compose.yml up -d'
-
+        stage('Docker Running Django App') {
+            steps {
+                sh 'docker-compose -f docker-compose.yml up -d'
             }
-            
-
         }
-
-        stage('Ready Testing') 
-
-        {
-
-            steps 
-            {
-                echo "Test it now"
-            }
- 
-
-
-        }
-    
-
     }
-
 }
