@@ -30,7 +30,7 @@ pipeline {
 
             {
 
-                sh 'docker-compose -f docker-compose.yml up -d app'
+                sh 'docker-compose -f docker-compose.yml up -d'
 
             }
             
