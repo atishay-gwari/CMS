@@ -21,7 +21,7 @@ pipeline {
 
         }
     
-        stage('Docker done') 
+        stage('Docker Running Django App') 
 
         {
 
@@ -30,7 +30,22 @@ pipeline {
 
             {
 
-                bash 'docker-compose up --build -d'
+                sh 'docker-compose -f docker-compose.yml up -d app'
+
+            }
+            
+
+        }
+        stage('Docker Running Prometheus App') 
+
+        {
+
+            
+            steps 
+
+            {
+
+                sh 'docker-compose -f docker-compose.yml up -d prometheus'
 
             }
             
