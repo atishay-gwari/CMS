@@ -19,9 +19,9 @@ pipeline {
         }
         stage('Docker Pushing to Registry') {
             steps {
-                sh 'doctl registry login'
-                sh 'docker tag cicd_cms_app registry.digitalocean.com/customcms/cicd_cms_app'
-                sh 'docker push registry.digitalocean.com/customcms/cicd_cms_app'
+                sh 'sudo doctl registry login'
+                sh 'sudo docker tag cicd_cms_app registry.digitalocean.com/customcms/cicd_cms_app'
+                sh 'sudo docker push registry.digitalocean.com/customcms/cicd_cms_app'
 
             }
         }
