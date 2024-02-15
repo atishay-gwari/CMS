@@ -12,6 +12,11 @@ pipeline {
                 sh 'docker-compose -f docker-compose.yml up -d'
             }
         }
+        stage('Whoami') {
+            steps {
+                sh 'dwhoami'
+            }
+        }
         stage('Docker Pushing to Registry') {
             steps {
                 sh 'doctl registry login'
