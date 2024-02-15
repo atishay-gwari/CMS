@@ -14,7 +14,7 @@ pipeline {
         }
         stage('Whoami') {
             steps {
-                sh 'dwhoami'
+                sh 'whoami'
             }
         }
         stage('Docker Pushing to Registry') {
