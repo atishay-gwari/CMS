@@ -2,12 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Deleting old docker Images') {
-            steps {
-                sh 'docker rm -vf $(docker ps -aq)'
-                sh 'docker rmi -f $(docker images -aq)'
-            }
-        }
 
         stage('Build Docker Images') {
             steps {
