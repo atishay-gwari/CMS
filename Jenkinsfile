@@ -20,6 +20,8 @@ pipeline {
         }
         stage('Whoami') {
             steps {
+                sh'pwd',
+                sh 'ls -a'
                 sh 'whoami'
             }
         }
