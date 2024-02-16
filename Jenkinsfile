@@ -2,13 +2,18 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Build Docker Images') {
+        stage('Cleanup Previous Docker Artifacts') {
             steps {
-                sh 'docker-compose -f docker-compose.yml build'
+                script {
+                    // Remove existing containers
+                    sh 'docker rm -f $(docker ps -a -q) || true'
+                    // Remove existing images
+                    sh 'docker rmi -f $(docker images -a -q) || true'
+                }
             }
         }
-        stage('Docker Running Django App') {
+
+        stage('Docker Running') {
             steps {
                 sh 'docker-compose -f docker-compose.yml up -d'
             }
