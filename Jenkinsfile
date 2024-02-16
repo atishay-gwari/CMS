@@ -2,16 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Cleanup Previous Docker Artifacts') {
-            steps {
-                script {
-                    // Remove existing containers
-                    sh 'docker rm -f $(docker ps -a -q) || true'
-                    // Remove existing images
-                    sh 'docker rmi -f $(docker images -a -q) || true'
-                }
-            }
-        }
         stage('Whoami') {
             steps {
                 sh'pwd'
