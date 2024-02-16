@@ -12,12 +12,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Docker Running') {
-            steps {
-                sh 'docker-compose -f docker-compose.yml up --build -d'
-            }
-        }
         stage('Whoami') {
             steps {
                 sh'pwd'
@@ -25,6 +19,13 @@ pipeline {
                 sh 'whoami'
             }
         }
+
+        stage('Docker Running') {
+            steps {
+                sh 'docker-compose -f docker-compose.yml up --build -d'
+            }
+        }
+        
         stage('Docker Pushing to Registry') {
             steps {
                 sh 'sudo doctl registry login'
